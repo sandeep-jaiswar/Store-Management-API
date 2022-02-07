@@ -5,41 +5,15 @@ const { errorHandler } = require('../helpers/dbErrorHandler');
 const product = require('../models/product')
 
 exports.create= (req,res)=>{
-    let form= new formidable.IncomingForm();
-    form.keepExtensions=true;
-    form.parse(req,(err,fields,files)=>{
-        console.log(files);
-        if(err){
-            return res.status(400).json({
-                err : "Image could not be uploaded"
-            })
-        }
-        const Product = new product(fields);
-        const {name,description,price,category,quantity} = fields;
-
-        if(!name||!description||!price||!category||!quantity){
-            return res.status(400).json({
-                err : "All fields are required"
-            })
-        }
-        if(files.photo){
-            if(files.photo.size > 5000000){
-                return res.status(400).json({
-                    err : "Image should not be greater than 5MB"
-                })
-            }
-            Product.photo.data =fs.readFileSync(files.photo.path);
-            Product.photo.contentType=files.photo.type;
-        }
-        Product.save((err,data)=>{
-            if(err || !data){
-                return res.status(400).json({
-                    err : errorHandler(err)
-                })
-            }
-            res.json({data});
-        })
-    })
+    const Product = new product(req.body);
+    Product.save((err, data) => {
+      if (err || !data) {
+        return res.status(400).json({
+          err: errorHandler(err),
+        });
+      }
+      res.json({ data });
+    });
 }
 
 exports.productById = (req,res,next,id)=>{
@@ -131,9 +105,9 @@ exports.getAll = (req,res) =>{
     console.log("order : "+order)
     var sortBy = req.query.sortBy ? req.query.sortBy :'_id';
     console.log("sortBy : "+sortBy)
-    var limit = req.query.limit ? req.query.limit :2;
+    var limit = req.query.limit ? req.query.limit :16;
     console.log("limit : "+limit)
-    product.find().select("-photo").populate('category').sort([[sortBy,order]]).limit(parseInt(limit)).exec((err,data)=>{
+    product.find().populate('category').sort([[sortBy,order]]).limit(parseInt(limit)).exec((err,data)=>{
         console.log(err)
         if(err || !data){
             return res.status(400).json({

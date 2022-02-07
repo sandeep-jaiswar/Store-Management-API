@@ -8,7 +8,7 @@ router.param('userId',userById);
 router.param('categoryId',categoryById);
 router.get('/category/:categoryId',read);
 router.get('/categories',getAll);
-router.post('/category/create/:userId',requireSignin,isAdmin,create);
+router.post('/category',create);
 router.put('/category/:categoryId/:userId',requireSignin,isAdmin,update);
 router.delete('/category/:categoryId/:userId',requireSignin,isAdmin,remove);
 

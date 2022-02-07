@@ -1,45 +1,109 @@
-const { ObjectId } = require('mongodb');
-const mongoose = require('mongoose');
+const { ObjectId } = require("mongodb");
+const mongoose = require("mongoose");
 
-const productSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        trim: true,
-        required: true,
-        maxlength: 32
+const productSchema = new mongoose.Schema(
+  {
+    NAME: {
+      type: String,
+      trim: true,
+      maxlength: 50,
+      required: false,
     },
-    description:{
-        type:String,
-        trim: true,
-        maxlength:2000,
-        required : true
+    IS_RATED: {
+      type: Boolean,
+      default: false,
+      required: false,
     },
-    price:{
-        type:Number,
-        trim:true,
-        required:true
+    CATEGORY: {
+      type: ObjectId,
+      required: true,
+      ref: "Category",
     },
-    category:{
-        type:ObjectId,
-        ref:'Category',
-        required:true
+    BRAND_ID: {
+      type: ObjectId,
+      trim: true,
+      ref: "Brand",
+      required: true,
     },
-    quantity:{
-        type:Number,
-        required : true
+    COLOR: {
+      type: String,
+      trim: true,
+      maxlength: 15,
+      required: false,
     },
-    sold:{
-        type:Number,
-        default : 0
+    COUNTRY_OF_ASSEMBLY: {
+      type: String,
+      trim: true,
+      maxlength: 20,
+      required: false,
     },
-    photo:{
-        data: Buffer,
-        contentType: String
+    COUNTRY_OF_ORIGIN: {
+      type: String,
+      trim: true,
+      maxlength: 20,
+      required: false,
     },
-    shipping:{
-        type:Boolean,
-        required:false
-    }
-},{timestamps: true});
+    GTIN: {
+      type: String,
+      trim: true,
+      maxlength: 20,
+      required: false,
+    },
+    HAS_MERCHANT_RETURN_POLICY: {
+      type: Boolean,
+      default: false,
+      required: false,
+    },
+    HAS_MEASUREMENT: {
+      type: Boolean,
+      default: false,
+      required: false,
+    },
+    IS_RELATED_TO: {
+      type: String,
+      trim: true,
+      maxlength: 200,
+      required: false,
+    },
+    HAS_VARIANT: {
+      type: Boolean,
+      default: 0,
+      required: false,
+    },
+    MANUFACTURER: {
+      type: String,
+      trim: true,
+      maxlength: 20,
+      required: false,
+    },
+    PRODUCTION_DATE: {
+      type: Date,
+      required: false,
+    },
+    IMAGE: {
+      type: String,
+      trim: true,
+      maxlength: 250,
+      required: false,
+    },
+    ALL_IMAGE: {
+      type: String,
+      trim: true,
+      maxlength: 1000,
+      required: false,
+    },
+    OFFER_PRICE: {
+      type: Number,
+      trim: true,
+      required: true,
+    },
+    SELLING_PRICE: {
+      type: Number,
+      trim: true,
+      required: true,
+    },
+  },
+  { timestamps: true }
+);
 
-module.exports = mongoose.model("Product",productSchema);
+module.exports = mongoose.model("Product", productSchema);
