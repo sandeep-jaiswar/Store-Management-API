@@ -2,17 +2,11 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require("mongoose");
 const cors = require('cors');
-const path = require('path');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const expressValidator = require('express-validator');
 const logger = require('morgan');
-const authRoute = require('./routes/auth');
-const userRoute = require('./routes/user');
-const categoryRoute = require('./routes/category');
-const productRoute = require('./routes/product');
-const brandRoute = require('./routes/brand');
-
+const rootRoute = require('./routes');
 const port = process.env.PORT || 3000
 
 const app = express();
@@ -32,6 +26,8 @@ app.listen(port, () => {
   console.log(`running server on ${port}`);
 })
 
+
+
 //middlewares
 app.use(cors());
 app.use(logger('dev'));
@@ -40,8 +36,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(expressValidator())
-app.use('/api', authRoute);
-app.use('/api', userRoute);
-app.use('/api', categoryRoute);
-app.use('/api', productRoute);
-app.use("/api", brandRoute);
+app.use('/api', rootRoute);
+
+
+//error global
+app.use((err, req, res, next) => {
+  console.log("in error")
+  if (! err) {
+      return next();
+  }
+  res.status(500);
+  console.log(err)
+  res.send(err);
+});
