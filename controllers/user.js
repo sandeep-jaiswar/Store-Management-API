@@ -11,17 +11,24 @@ exports.create = (req, res, next) => {
         }
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
         insertToken({ id: user._id, token }, res, next);
+        req.session.sid = user._id;
     });
 }
 
-exports.getAll = (req, res, next) => {
-    user.find((err, users) => {
-        if (err) {
-            res.send(err.message)
-        } else {
-            res.send(users).json().status(200);
-        }
-    })
+exports.getAll = async (req, res, next) => {
+    const resultFromRedis = await global.redis.get('getAllUser');
+    if (resultFromRedis) {
+        res.send(JSON.parse(resultFromRedis)).json().status(200);
+    } else {
+        user.find((err, users) => {
+            if (err) {
+                res.send(err.message);
+            } else {
+                global.redis.set('getAllUser', JSON.stringify(users));
+                res.send(users).json().status(200);
+            }
+        })
+    }
 }
 
 exports.userById = async (req, res, next, id) => {
