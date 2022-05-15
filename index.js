@@ -20,9 +20,10 @@ mongoose.connect(process.env.MONGO_URL, {
   useNewUrlParser: true,
   useFindAndModify: true,
 })
-const connection = mongoose.connection
+const connection = mongoose.connection;
 connection.once("open", function () {
-  console.info("MongoDB database connection established successfully")
+  console.info("MongoDB database connection established successfully");
+  global.db = connection;
 })
 
 //redis
@@ -38,12 +39,12 @@ const startRedis = async () => {
   })
   return client
 }
-;(async () => {
+(async () => {
   const redi = await startRedis()
   global.redis = redi
 })()
 
-const app = express()
+const app = express();
 
 //express-session
 const sessionObj = {
