@@ -1,6 +1,5 @@
 const axios = require("axios")
 const querystring = require("querystring")
-const { OTPManager } = require("../helpers/OTPManager")
 const { create } = require("./user")
 
 exports.sendOTP = async (req, res, next) => {
